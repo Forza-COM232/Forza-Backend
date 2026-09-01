@@ -1,0 +1,20 @@
+[project]
+name = "forza-backend"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "chayen", email = "romory@pop-os.CG-24D" }
+]
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi[standard]>=0.141.1",
+    "pytest>=9.1.1",
+]
+
+[project.scripts]
+forza-backend = "forza_backend:main"
+
+[build-system]
+requires = ["uv_build>=0.12.8,<0.13.0"]
+build-backend = "uv_build"
