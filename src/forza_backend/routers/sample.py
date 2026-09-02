@@ -3,8 +3,8 @@
 # Don't put anything on this file, create your own file and make sure to have meaningful name.
 
 from fastapi import APIRouter
-from src.forza_backend.services.sample import SampleService
-from src.forza_backend.schemas.sample import SampleResponse
+from ..services.sample import SampleService
+from ..schemas.sample import SampleResponse
 
 router = APIRouter(prefix="/sample")
 
