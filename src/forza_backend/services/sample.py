@@ -3,7 +3,7 @@
 # So, don't put anything on this file, create your own file and make sure to have meaningful name.
 
 from uuid import uuid4
-from src.forza_backend.models.sample import SampleModel
+from ..models.sample import SampleModel
 
 class SampleService():
     

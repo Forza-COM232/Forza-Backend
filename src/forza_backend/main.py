@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from src.forza_backend.routers import sample
+from .routers import sample
 
 app = FastAPI()
 

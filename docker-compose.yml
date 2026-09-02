@@ -4,6 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: forza-api
+    command: fastapi run src/forza_backend/main.py --host 0.0.0.0 --port 8000
     ports:
       - "8000:8000"
     environment:
