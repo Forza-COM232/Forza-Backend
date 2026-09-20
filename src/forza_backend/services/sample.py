@@ -3,7 +3,7 @@
 # So, don't put anything on this file, create your own file and make sure to have meaningful name.
 
 from uuid import uuid4
-from ..core.models.sample import SampleModel
+from ..infrastructure.database.models.sample import SampleModel
 
 class SampleService():
     

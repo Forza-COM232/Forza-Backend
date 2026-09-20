@@ -7,5 +7,8 @@ class DatabaseException(ForzaCoreApi):
 class DuplicateException(DatabaseException):
     ...
 
-class NotFoundException(DatabaseException):
+class NotFoundException(Exception):
+    ...
+
+class UserNotFoundException(NotFoundException):
     ...
