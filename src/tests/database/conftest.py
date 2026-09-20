@@ -2,7 +2,7 @@ import pytest
 from typing import Any
 from sqlalchemy import Engine, create_engine, event
 from sqlalchemy.orm import sessionmaker
-from testcontainers.postgres import PostgresContainer
+from testcontainers.community.postgres import PostgresContainer
 from src.forza_backend.infrastructure.database.connection import Base
 
 def _disable_fk_constraints(dbapi_connection: Any, _connection_record: Any) -> None:

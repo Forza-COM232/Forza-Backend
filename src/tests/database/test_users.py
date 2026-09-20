@@ -5,6 +5,23 @@ from sqlalchemy.orm import Session
 from src.forza_backend.infrastructure.database.models.users import User
 from src.forza_backend.core.exceptions import NotFoundException, UserNotFoundException
 
+def test_get_by_id_success(test_session: Session):
+    user = User(
+        user_id=uuid4(),
+        name="User",
+        email="test@email.com",
+        hashed_password="hashed-pass"
+    )
+    
+    test_session.add(user)
+    test_session.commit()
+    
+    result = User.get_by_id(test_session, user.user_id)
+    
+    assert user.user_id == result.user_id
+    assert result.name == user.name
+    assert result.email == user.email
+
 def test_get_by_id_raises_not_found_when_missing(test_session: Session):
     with pytest.raises(NotFoundException, match="User not found"):
         User.get_by_id(test_session, uuid4())
