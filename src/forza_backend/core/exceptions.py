@@ -12,3 +12,6 @@ class NotFoundException(Exception):
 
 class UserNotFoundException(NotFoundException):
     ...
+
+class StockMovementNotFoundException(NotFoundException):
+    ...
