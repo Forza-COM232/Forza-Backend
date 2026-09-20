@@ -64,7 +64,8 @@ class Product(Base):
         default=0
     )
     
-    category = relationship("Category", back_populates="products")
+    category = relationship("Category", back_populates="product")
+    stock_movement = relationship("StockMovement", back_populates="product")
     
     @classmethod
     def get_by_id(cls, db: Session, product_id: uuid.UUID) -> "Product":
