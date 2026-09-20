@@ -3,13 +3,37 @@ from uuid import uuid4
 from sqlalchemy.orm import Session
 from unittest.mock import MagicMock
 from src.forza_backend.core.enums.movement_types import MovementType
+from src.forza_backend.core.enums.unit_of_measurements import UnitMeasurements
 from src.forza_backend.infrastructure.database.models.stock_movement import StockMovement
-# from src.forza_backend.infrastructure.database.models.users import User
+from src.forza_backend.infrastructure.database.models.users import User
+from src.forza_backend.infrastructure.database.models.product import Product
 from src.forza_backend.core.exceptions import StockMovementNotFoundException
 
 @pytest.fixture
 def db_session():
     return MagicMock()
+
+def fake_user() -> User:
+    return User(
+        user_id=uuid4(),
+        name="Test User",
+        email="test@email.com",
+        hashed_password="hashed-pass"
+    )
+
+def fake_product() -> Product:
+    return Product(
+        product_id=uuid4(),
+        category_id=uuid4(),
+        sku="NIK-123",
+        bardcode="ABCC-DEFF",
+        product_name="Test Product",
+        description="Test",
+        unit_measurement=UnitMeasurements.KILOGRAM,
+        cost_price=12.00,
+        selling_price=15.00,
+        reorder_level=20
+    )
 
 def test_get_by_id_success(db_session: MagicMock):
     stock_movement_id = uuid4()
@@ -34,9 +58,12 @@ def test_get_by_id_raises_not_found(db_session: MagicMock):
 
 # Will fail since Product Model haven't implemented yet
 def test_get_by_id_success_integration(test_session: Session):
+    user = fake_user()
+    product = fake_product()
+    
     stock_movement = StockMovement(
-        product_id=uuid4(),
-        performed_by=uuid4(),
+        product_id=product.product_id,
+        performed_by=user.user_id,
         movement_type=MovementType.STOCK_IN,
         quantity=5,
         reason="Initial stock"
