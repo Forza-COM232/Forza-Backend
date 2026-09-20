@@ -1,9 +1,9 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import EmailStr
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from uuid import UUID, uuid4
-from ..database import Base
+from ...infrastructure.database.connection import Base
 
 class Users(Base):
     __tablename__ = "users"
@@ -11,6 +11,7 @@ class Users(Base):
     user_id: Mapped[UUID] = mapped_column(
         PG_UUID(as_uuid=True),
         primary_key=True,
+        unique=True,
         default=uuid4
     )
     
