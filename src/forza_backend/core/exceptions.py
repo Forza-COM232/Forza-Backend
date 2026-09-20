@@ -3,3 +3,9 @@ class ForzaCoreApi(Exception):
 
 class DatabaseException(ForzaCoreApi):
     ...
+
+class DuplicateException(DatabaseException):
+    ...
+
+class NotFoundException(DatabaseException):
+    ...
