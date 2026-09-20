@@ -3,8 +3,9 @@ from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from uuid import UUID, uuid4
+from ..database import Base
 
-class Users(BaseModel):
+class Users(Base):
     __tablename__ = "users"
     
     user_id: Mapped[UUID] = mapped_column(

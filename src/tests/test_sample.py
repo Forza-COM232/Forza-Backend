@@ -1,5 +1,5 @@
 from src.forza_backend.main import app
-from src.forza_backend.models.sample import SampleModel
+from forza_backend.core.models.sample import SampleModel
 from fastapi.testclient import TestClient
 import pytest
 
