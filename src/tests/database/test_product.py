@@ -4,7 +4,8 @@ from unittest.mock import MagicMock
 from sqlalchemy.orm import Session
 from src.forza_backend.infrastructure.database.models.product import Product
 from src.forza_backend.core.exceptions import ProductNotFoundException
-from src.forza_backend.core.enums.unit_of_measurements import UnitMeasurements
+
+from src.tests.database.utils.mock_data import mock_product
 
 @pytest.fixture
 def db_session():
@@ -30,20 +31,9 @@ def test_get_by_id_raise_not_found(db_session: MagicMock):
     with pytest.raises(ProductNotFoundException, match="Product not found"):
         Product.get_by_id(db_session, product_id)
 
-# Integration Test will fail until Category Model has been implemented
+# Integration Test 
 def test_get_by_id_success_integration(test_session: Session):
-    product = Product(
-        product_id=uuid4(),
-        category_id=uuid4(),
-        sku="NIK-123",
-        bardcode="ABCC-DEFF",
-        product_name="Test Product",
-        description="Test",
-        unit_measurement=UnitMeasurements.KILOGRAM,
-        cost_price=12.00,
-        selling_price=15.00,
-        reorder_level=20
-    )
+    product = mock_product()
     
     test_session.add(product)
     test_session.commit()
@@ -51,3 +41,7 @@ def test_get_by_id_success_integration(test_session: Session):
     result = Product.get_by_id(test_session, product.product_id)
     
     assert product.product_id == result.product_id
+
+def test_get_by_id_raises_not_found_integration(test_session: Session):
+    with pytest.raises(ProductNotFoundException, match="Product not found"):
+        Product.get_by_id(test_session, uuid4())

@@ -1,7 +1,7 @@
 import sqlalchemy, uuid
 from pydantic import EmailStr
 from sqlalchemy import String
-from sqlalchemy.orm import Mapped, mapped_column, Session
+from sqlalchemy.orm import Mapped, mapped_column, Session, relationship
 from ..connection import Base
 from ....core.exceptions import UserNotFoundException
 
@@ -29,6 +29,8 @@ class User(Base):
         String,
         nullable=False
     )
+    
+    stock_movement = relationship("StockMovement", back_populates="user")
 
     @classmethod
     def get_by_id(cls, db: Session, user_id: uuid.UUID) -> "User":

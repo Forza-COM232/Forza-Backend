@@ -18,3 +18,6 @@ class StockMovementNotFoundException(NotFoundException):
 
 class ProductNotFoundException(NotFoundException):
     ...
+
+class CategoryNotFoundException(NotFoundException):
+    ...
