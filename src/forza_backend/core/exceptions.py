@@ -21,3 +21,6 @@ class ProductNotFoundException(NotFoundException):
 
 class CategoryNotFoundException(NotFoundException):
     ...
+
+class SupplierNotFoundException(NotFoundException):
+    ...
