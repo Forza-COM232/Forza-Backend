@@ -1,6 +1,5 @@
 import sqlalchemy, uuid
-from typing import Optional
-from sqlalchemy import ForeignKey, Integer, String
+from sqlalchemy import ForeignKey, Integer
 from sqlalchemy.orm import Mapped, mapped_column, Session, relationship
 from ..connection import Base
 from ....core.exceptions import InventoryNotFoundException
@@ -25,11 +24,6 @@ class Inventory(Base):
         Integer,
         nullable=False,
         default=0
-    )
-
-    location: Mapped[Optional[str]] = mapped_column(
-        String,
-        nullable=True
     )
 
     product = relationship("Product", back_populates="inventory")
