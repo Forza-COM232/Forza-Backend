@@ -24,5 +24,9 @@ class CategoryNotFoundException(NotFoundException):
 
 class InventoryNotFoundException(NotFoundException):
     ...
+    
 class SupplierNotFoundException(NotFoundException):
+    ...
+
+class PurchaseOrderNotFoundException(NotFoundException):
     ...
