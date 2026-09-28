@@ -24,3 +24,6 @@ class CategoryNotFoundException(NotFoundException):
 
 class SupplierNotFoundException(NotFoundException):
     ...
+
+class InvalidBarcodeException(ForzaCoreApi):
+    ...

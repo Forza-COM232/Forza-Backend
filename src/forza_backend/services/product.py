@@ -4,7 +4,7 @@ from uuid import UUID
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from ..core.exceptions import DatabaseException, DuplicateException
+from ..core.exceptions import DatabaseException, DuplicateException, InvalidBarcodeException
 from ..infrastructure.database.models.category import Category
 from ..infrastructure.database.models.product import Product
 from ..schemas.product import ProductCreate, ProductUpdate
@@ -20,7 +20,7 @@ class ProductService:
         product = Product(**data.model_dump())
         db.add(product)
         try:
-            db.commit()
+            db.flush()
         except IntegrityError as exc:
             db.rollback()
             raise DuplicateException("This product already exists") from exc
@@ -55,19 +55,24 @@ class ProductService:
             setattr(product, field, value)
 
         try:
-            db.commit()
+            db.flush()
         except IntegrityError as exc:
             db.rollback()
             raise DuplicateException("This product already exists") from exc
         db.refresh(product)
         return product
+    
+    @staticmethod
+    def validate_barcode(barcode: Optional[str]) -> None:
+        if barcode is not None and len(barcode) > 14:
+            raise InvalidBarcodeException("Barcode must be at most 14 characters long")
 
     @staticmethod
     def delete_product(db: Session, product_id: UUID) -> None:
         product = Product.get_by_id(db, product_id)
         db.delete(product)
         try:
-            db.commit()
+            db.flush()
         except IntegrityError as exc:
             db.rollback()
             # This error occurs when trying to delete a product that has associated stock movements
