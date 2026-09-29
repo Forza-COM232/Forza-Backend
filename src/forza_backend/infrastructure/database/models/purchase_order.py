@@ -46,6 +46,10 @@ class PurchaseOrder(Base):
 
     supplier = relationship("Supplier")
     user = relationship("User")
+    items = relationship("PurchaseOrderItem", 
+back_populates="purchase_order", cascade="all, delete-orphan")
+
+    
 
     @classmethod
     def get_by_id(cls, db: Session, purchase_order_id: uuid.UUID) -> "PurchaseOrder":
