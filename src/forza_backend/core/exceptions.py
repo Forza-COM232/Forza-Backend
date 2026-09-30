@@ -28,6 +28,9 @@ class InventoryNotFoundException(NotFoundException):
 class SupplierNotFoundException(NotFoundException):
     ...
 
+class InvalidBarcodeException(ForzaCoreApi):
+    ...
+    
 class PurchaseOrderNotFoundException(NotFoundException):
     ...
 
