@@ -22,6 +22,9 @@ class ProductNotFoundException(NotFoundException):
 class CategoryNotFoundException(NotFoundException):
     ...
 
+class CategoryInActiveException(ForzaCoreApi):
+    ...
+
 class InventoryNotFoundException(NotFoundException):
     ...
     
