@@ -5,6 +5,7 @@ from src.forza_backend.infrastructure.database.models.users import User
 from src.forza_backend.infrastructure.database.models.product import Product
 from src.forza_backend.infrastructure.database.models.category import Category
 from src.forza_backend.infrastructure.database.models.stock_movement import StockMovement
+from src.forza_backend.infrastructure.database.models.supplier import Supplier
 
 def mock_user() -> User:
     return User(
@@ -45,4 +46,14 @@ def mock_category() -> Category:
         category_id=uuid4(),
         category_name="Beverages",
         description="Any drinkable liquids"
+    )
+
+def mock_supplier() -> Supplier:
+    return Supplier(
+        supplier_id=uuid4(),
+        supplier_name="Test Supplier",
+        contact_name="John Doe",
+        email="supplier@example.com",
+        phone="+1234567890",
+        address="123 Industrial Way, Metro City"
     )
