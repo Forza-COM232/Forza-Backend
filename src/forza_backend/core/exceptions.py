@@ -39,3 +39,6 @@ class PurchaseOrderItemNotFoundException(NotFoundException):
     
 class SaleNotFoundException(NotFoundException):
     ...
+
+class SaleItemNotFoundException(NotFoundException):
+    ...

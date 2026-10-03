@@ -1,10 +1,12 @@
 import sqlalchemy, uuid, decimal
 from typing import Optional
+from uuid import UUID
+from sqlalchemy import ForeignKey, String, Numeric, Integer
+from sqlalchemy.orm import Mapped, mapped_column, relationship, Session
 from ..connection import Base
 from ....core.enums.unit_of_measurements import UnitMeasurements
 from ....core.exceptions import ProductNotFoundException
-from sqlalchemy import ForeignKey, String, Numeric, Integer
-from sqlalchemy.orm import Mapped, mapped_column, relationship, Session
+from .category import Category
 
 class Product(Base):
     __tablename__ = "products"
@@ -67,7 +69,6 @@ class Product(Base):
     category = relationship("Category", back_populates="product")
     stock_movement = relationship("StockMovement", back_populates="product")
     inventory = relationship("Inventory", back_populates="product", uselist=False)
-
     
     @classmethod
     def get_by_id(cls, db: Session, product_id: uuid.UUID) -> "Product":

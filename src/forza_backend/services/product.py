@@ -3,30 +3,13 @@ from uuid import UUID
 
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
-
 from ..core.exceptions import DatabaseException, DuplicateException, InvalidBarcodeException
 from ..infrastructure.database.models.category import Category
 from ..infrastructure.database.models.product import Product
-from ..schemas.product import ProductCreate, ProductUpdate
+from ..schemas.product import ProductUpdate
 
 
 class ProductService:
-
-    @staticmethod
-    def create_product(db: Session, data: ProductCreate) -> Product:
-        # Validate that the category exists
-        Category.get_by_id(db, data.category_id)
-
-        product = Product(**data.model_dump())
-        db.add(product)
-        try:
-            db.flush()
-        except IntegrityError as exc:
-            db.rollback()
-            raise DuplicateException("This product already exists") from exc
-        db.refresh(product)
-        return product
-
     @staticmethod
     def get_product(db: Session, product_id: UUID) -> Product:
         return Product.get_by_id(db, product_id)
@@ -66,14 +49,3 @@ class ProductService:
     def validate_barcode(barcode: Optional[str]) -> None:
         if barcode is not None and len(barcode) > 14:
             raise InvalidBarcodeException("Barcode must be at most 14 characters long")
-
-    @staticmethod
-    def delete_product(db: Session, product_id: UUID) -> None:
-        product = Product.get_by_id(db, product_id)
-        db.delete(product)
-        try:
-            db.flush()
-        except IntegrityError as exc:
-            db.rollback()
-            # This error occurs when trying to delete a product that has associated stock movements
-            raise DatabaseException("Restricted action due to stock movement of the product") from exc
