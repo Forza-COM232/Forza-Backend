@@ -4,10 +4,10 @@ from pydantic import BaseModel, ConfigDict, Field
 
 class SupplierCreate(BaseModel):
     supplier_name: str = Field(..., min_length=1, max_length=255)
-    contact_name: str = Field(None, max_length=255)
+    contact_name: str = Field(..., max_length=255)
     email: Optional[str] = Field(None, max_length=255)
-    phone: str = Field(None, max_length=50)
-    address: str = None
+    phone: str = Field(..., max_length=50)
+    address: str = Field(...)
 
 class SupplierUpdate(BaseModel):
     supplier_name: Optional[str] = Field(None, min_length=1, max_length=255)

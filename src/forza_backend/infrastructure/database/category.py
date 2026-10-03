@@ -4,9 +4,9 @@ from uuid import UUID
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from ....core.exceptions import CategoryInActiveException
-from ....infrastructure.database.models.category import Category
-from ....schemas.category import CategoryCreate, CategoryUpdate
+from ...core.exceptions import CategoryInActiveException
+from .models.category import Category
+from ...schemas.category import CategoryCreate, CategoryUpdate
 
 
 class CategoryService:

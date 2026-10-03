@@ -36,17 +36,17 @@ class ProductDatabase:
         query = db.query(Product)
         if category_id:
             query = query.filter(Product.category_id == category_id)
-        return query.order_by(Product.product_name).offset(skip).limit(limit).all()
+        return query.order_by(Product.product_id).offset(skip).limit(limit).all()
     
     @staticmethod
     def update_product(db: Session, product_id: UUID, update_data: ProductUpdate) -> Product:
         product = Product.get_by_id(db, product_id)
 
-        changes = update_data.model_dump(exclude_unset=True)
-        if "category_id" in changes and changes["category_id"] is not None:
-            Category.get_by_id(db, changes["category_id"])
+        data_changes = update_data.model_dump(exclude_unset=True)
+        if "category_id" in data_changes and data_changes["category_id"] is not None:
+            Category.get_by_id(db, data_changes["category_id"])
 
-        for field, value in changes.items():
+        for field, value in data_changes.items():
             setattr(product, field, value)
 
         try:

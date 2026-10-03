@@ -68,7 +68,13 @@ def test_service_create_supplier_success(db_session: MagicMock):
 
 
 def test_service_create_supplier_duplicate_raises(db_session: MagicMock):
-    data = SupplierCreate(supplier_name="Acme Corp")
+    data = SupplierCreate(
+        supplier_name="Acme Corp",
+        contact_name="Test User",
+        email=None,
+        phone="09",
+        address="Test Street, City"
+    )
     db_session.flush.side_effect = IntegrityError("statement", "params", Exception("duplicate"))
 
     with pytest.raises(DuplicateException, match="This supplier already exists"):
@@ -110,7 +116,12 @@ def test_service_update_supplier_success(db_session: MagicMock):
     mock_instance.supplier_name = "Old Name"
     db_session.query.return_value.filter.return_value.one_or_none.return_value = mock_instance
 
-    data = SupplierUpdate(supplier_name="New Name")
+    data = SupplierUpdate(
+        supplier_name="New Name",
+        contact_name="",
+        email="",
+        phone=""
+    )
     result = SupplierService.update_supplier(db_session, supplier_id, data)
 
     assert result.supplier_name == "New Name"
