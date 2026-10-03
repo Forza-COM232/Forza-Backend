@@ -19,7 +19,6 @@ class ProductCreate(BaseModel):
     reorder_level: int = Field(0, ge=0)
 
 class ProductUpdate(BaseModel):
-    category_id: Optional[UUID] = None
     sku: Optional[str] = Field(None, min_length=1, max_length=64)
     barcode: Optional[str] = Field(None, min_length=1, max_length=14)
     product_name: Optional[str] = Field(None, min_length=1)
