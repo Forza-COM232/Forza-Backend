@@ -67,8 +67,3 @@ class ProductDatabase:
             db.rollback()
             # This error occurs when trying to delete a product that has associated stock movements
             raise DatabaseException("Restricted action due to stock movement of the product") from exc
-    
-    @staticmethod
-    def validate_barcode(barcode: Optional[str]) -> None:
-        if barcode is not None and len(barcode) > 14:
-            raise InvalidBarcodeException("Barcode must be at most 14 characters long")
