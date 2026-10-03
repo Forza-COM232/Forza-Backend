@@ -1,6 +1,5 @@
 import sqlalchemy, uuid
-from typing import Optional
-from sqlalchemy import String
+from sqlalchemy import String, Boolean
 from sqlalchemy.orm import Mapped, mapped_column, Session
 from ..connection import Base
 from ....core.exceptions import SupplierNotFoundException
@@ -19,24 +18,30 @@ class Supplier(Base):
         nullable=False
     )
 
-    contact_name: Mapped[Optional[str]] = mapped_column(
+    contact_name: Mapped[str] = mapped_column(
         String,
         nullable=True
     )
 
-    email: Mapped[Optional[str]] = mapped_column(
+    email: Mapped[str] = mapped_column(
         String,
         nullable=True
     )
 
-    phone: Mapped[Optional[str]] = mapped_column(
+    phone: Mapped[str] = mapped_column(
         String,
         nullable=True
     )
 
-    address: Mapped[Optional[str]] = mapped_column(
+    address: Mapped[str] = mapped_column(
         String,
         nullable=True
+    )
+    
+    is_active: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=True,
     )
 
     @classmethod
