@@ -4,6 +4,7 @@ from sqlalchemy import ForeignKey, String, Numeric, DateTime, func
 from sqlalchemy.orm import Mapped, mapped_column, Session, relationship
 from ..connection import Base
 from ....core.exceptions import SaleNotFoundException
+from ....core.enums.payment_method import PaymentMethodEnum
 
 class Sale(Base):
     __tablename__ = "sales"
@@ -32,13 +33,15 @@ class Sale(Base):
         default=decimal.Decimal("0.00")
     )
 
-    payment_method: Mapped[str] = mapped_column(
-        String,
+    payment_method: Mapped[PaymentMethodEnum] = mapped_column(
+        sqlalchemy.Enum(PaymentMethodEnum),
         nullable=False,
-        default="CASH"
+        default=PaymentMethodEnum.CASH
     )
 
     user = relationship("User")
+    items = relationship( "SaleItem", back_populates="sale", cascade="all, delete-orphan")
+    sale = relationship("Sale", back_populates="items")
 
     @classmethod
     def get_by_id(cls, db: Session, sale_id: uuid.UUID) -> "Sale":
