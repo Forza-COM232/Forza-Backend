@@ -4,6 +4,7 @@ from sqlalchemy import ForeignKey, String, Numeric, DateTime, func
 from sqlalchemy.orm import Mapped, mapped_column, Session, relationship
 from ..connection import Base
 from ....core.exceptions import PurchaseOrderNotFoundException
+from ....core.enums.purchase_order_status import PurchaseOrderStatusEnum
 
 class PurchaseOrder(Base):
     __tablename__ = "purchase_orders"
@@ -25,6 +26,12 @@ class PurchaseOrder(Base):
         ForeignKey("users.user_id", ondelete="RESTRICT"),
         nullable=False
     )
+    
+    # received_by: Mapped[uuid.UUID] = mapped_column(
+    #     sqlalchemy.UUID(as_uuid=True),
+    #     ForeignKey("users.user_id", ondelete="RESTRICT"),
+    #     nullable=False
+    # )
 
     order_date: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
@@ -32,10 +39,10 @@ class PurchaseOrder(Base):
         default=func.now()
     )
 
-    status: Mapped[str] = mapped_column(
-        String,
+    status: Mapped[PurchaseOrderStatusEnum] = mapped_column(
+        sqlalchemy.Enum(PurchaseOrderStatusEnum),
         nullable=False,
-        default="PENDING"
+        default=PurchaseOrderStatusEnum.PENDING
     )
 
     total_amount: Mapped[decimal.Decimal] = mapped_column(
@@ -44,12 +51,9 @@ class PurchaseOrder(Base):
         default=decimal.Decimal("0.00")
     )
 
-    supplier = relationship("Supplier")
-    user = relationship("User")
-    items = relationship("PurchaseOrderItem", 
-back_populates="purchase_order", cascade="all, delete-orphan")
-
-    
+    supplier = relationship("Supplier", back_populates="purchase_orders")
+    user = relationship("User", back_populates="purchase_orders")
+    items = relationship("PurchaseOrderItem", back_populates="purchase_order", cascade="all, delete-orphan")
 
     @classmethod
     def get_by_id(cls, db: Session, purchase_order_id: uuid.UUID) -> "PurchaseOrder":
