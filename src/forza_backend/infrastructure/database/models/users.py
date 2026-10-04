@@ -1,6 +1,6 @@
 import sqlalchemy, uuid
 from pydantic import EmailStr
-from sqlalchemy import String
+from sqlalchemy import String, Boolean
 from sqlalchemy.orm import Mapped, mapped_column, Session, relationship
 from ..connection import Base
 from ....core.exceptions import UserNotFoundException
@@ -28,6 +28,12 @@ class User(Base):
     hashed_password: Mapped[str] = mapped_column(
         String,
         nullable=False
+    )
+    
+    is_active: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=True
     )
     
     stock_movement = relationship("StockMovement", back_populates="user")

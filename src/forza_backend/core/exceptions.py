@@ -13,6 +13,9 @@ class NotFoundException(Exception):
 class UserNotFoundException(NotFoundException):
     ...
 
+class UserAlreadyDeactivatedException(ForzaCoreApi):
+    ...
+
 class StockMovementNotFoundException(NotFoundException):
     ...
 
