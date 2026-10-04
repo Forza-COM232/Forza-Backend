@@ -31,7 +31,7 @@ class StockMovement(Base):
         nullable=False
     )
     
-    quantity: Mapped[int] = mapped_column(
+    quantity_delta: Mapped[int] = mapped_column(
         Integer,
         nullable=False
     )

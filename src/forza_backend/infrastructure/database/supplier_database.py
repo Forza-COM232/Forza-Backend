@@ -5,7 +5,7 @@ from ...schemas.supplier import SupplierCreate, SupplierUpdate
 from .models.supplier import Supplier
 from ...core.exceptions import DuplicateException, DatabaseException
 
-class SupplierDatabase():
+class SupplierDatabase:
     @staticmethod
     def create_supplier(db: Session, supplier_data: SupplierCreate):
         supplier = Supplier(**supplier_data.model_dump())

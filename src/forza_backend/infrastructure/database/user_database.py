@@ -4,7 +4,7 @@ from sqlalchemy.exc import IntegrityError
 from .models.users import User
 from ...core.exceptions import DatabaseException
 
-class UserDatabase():
+class UserDatabase:
     @staticmethod
     def create_user(db: Session, user: User) -> User:
         db.add(user)
