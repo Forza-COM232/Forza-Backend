@@ -37,6 +37,7 @@ class User(Base):
     )
     
     stock_movement = relationship("StockMovement", back_populates="user")
+    purchase_orders = relationship("PurchaseOrder", back_populates="user")
 
     @classmethod
     def get_by_id(cls, db: Session, user_id: uuid.UUID) -> "User":

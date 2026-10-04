@@ -13,7 +13,7 @@ class UserDatabase():
         except IntegrityError as e:
             db.rollback()
             raise DatabaseException("Failed to create user.") from e
-        db.flush()
+        db.refresh(user)
         return user
     
     @staticmethod

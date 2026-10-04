@@ -10,10 +10,13 @@ class DuplicateException(DatabaseException):
 class NotFoundException(Exception):
     ...
 
+class UserException(ForzaCoreApi):
+    ...
+
 class UserNotFoundException(NotFoundException):
     ...
 
-class UserAlreadyDeactivatedException(ForzaCoreApi):
+class UserAlreadyDeactivatedException(UserException):
     ...
 
 class StockMovementNotFoundException(NotFoundException):
@@ -39,11 +42,20 @@ class SupplierInActiveException(ForzaCoreApi):
 
 class InvalidBarcodeException(ForzaCoreApi):
     ...
+
+class PurchaseOrderException(ForzaCoreApi):
+    ...
     
 class PurchaseOrderNotFoundException(NotFoundException):
     ...
 
 class PurchaseOrderItemNotFoundException(NotFoundException):
+    ...
+
+class PurchaseOrderSupplierInactiveException(PurchaseOrderException):
+    ...
+
+class PurchaseOrderStatusException(PurchaseOrderException):
     ...
     
 class SaleNotFoundException(NotFoundException):

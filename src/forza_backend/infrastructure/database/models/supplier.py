@@ -1,6 +1,6 @@
 import sqlalchemy, uuid
 from sqlalchemy import String, Boolean
-from sqlalchemy.orm import Mapped, mapped_column, Session
+from sqlalchemy.orm import Mapped, mapped_column, Session, relationship
 from ..connection import Base
 from ....core.exceptions import SupplierNotFoundException
 
@@ -43,6 +43,8 @@ class Supplier(Base):
         nullable=False,
         default=True,
     )
+    
+    purchase_orders = relationship("PurchaseOrder", back_populates="supplier")
 
     @classmethod
     def get_by_id(cls, db: Session, supplier_id: uuid.UUID) -> "Supplier":
