@@ -25,7 +25,16 @@ class UserDatabase():
         return db.query(User).order_by(User.user_id).offset(skip).limit(limit).all()
     
     @staticmethod
-    def delete_user(db: Session, user_id: UUID) -> bool:
+    def update_user(db: Session, user: User) -> User:
+        try:
+            db.flush()
+        except IntegrityError as e:
+            db.rollback()
+            raise DatabaseException("Failed to update user") from e
+        return user
+    
+    @staticmethod
+    def delete_user(db: Session, user_id: UUID) -> None:
         user = User.get_by_id(db, user_id)
         
         try:
@@ -34,4 +43,3 @@ class UserDatabase():
         except IntegrityError as e:
             db.rollback()
             raise DatabaseException("Failed to delete user.") from e
-        return True
