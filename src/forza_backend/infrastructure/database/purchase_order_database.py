@@ -4,7 +4,7 @@ from uuid import UUID
 from .models.purchase_order import PurchaseOrder
 from ...core.exceptions import DatabaseException
 
-class PurchaseOrderDatabase():
+class PurchaseOrderDatabase:
     @staticmethod
     def create_purchase_order(db: Session, purchase_order: PurchaseOrder) -> PurchaseOrder:
         db.add(purchase_order)
