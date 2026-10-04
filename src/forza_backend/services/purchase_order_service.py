@@ -32,7 +32,7 @@ class PurchaseOrderService():
         
         purchase_order = PurchaseOrder(
             supplier_id=supplier.supplier_id,
-            order_by=user,
+            ordered_by=user.user_id,
             status = PurchaseOrderStatusEnum.PENDING,
             total_amount = Decimal("0.00")
         )
@@ -65,17 +65,27 @@ class PurchaseOrderService():
         if purchase_order.status != PurchaseOrderStatusEnum.PENDING:
             raise PurchaseOrderStatusException("Only purchase order with pending status can be edited")
         
-        if purchase_order.status == PurchaseOrderStatusEnum.COMPLETED:
-            raise PurchaseOrderStatusException("Completed purchase order cannot be modified")
-        
-        if purchase_data.status is not None:
-            self._validate_status_transition(
-                current_status=purchase_order.status,
-                new_status=purchase_data.status
-            )
-            
-            purchase_order.status = purchase_data.status
-        
+        if purchase_data.purchase_order_item is not None:
+            purchase_order.items.clear()
+            total_amount = Decimal("0.00")
+
+            for item_data in purchase_data.purchase_order_item:
+                product = ProductDatabase.get_product(db, item_data.product_id)
+
+                total_price = item_data.quantity * item_data.unit_cost
+
+                item = PurchaseOrderItem(
+                    product_id=product.product_id,
+                    quantity=item_data.quantity,
+                    unit_cost=item_data.unit_cost,
+                    total_price=total_price
+                )
+
+                purchase_order.items.append(item)
+                total_amount += total_price
+
+            purchase_order.total_amount = total_amount
+
         return PurchaseOrderDatabase.update_purchase_order(db, purchase_order)
     
     @staticmethod
@@ -94,7 +104,7 @@ class PurchaseOrderService():
         return PurchaseOrderDatabase.update_purchase_order(db, purchase_order)
     
     @staticmethod
-    def cancelled_purchase_order(db: Session, purchase_order_id: UUID) -> PurchaseOrder:
+    def cancel_purchase_order(db: Session, purchase_order_id: UUID) -> PurchaseOrder:
         purchase_order = PurchaseOrderDatabase.get_purchase_order(db, purchase_order_id)
         if purchase_order.status != PurchaseOrderStatusEnum.PENDING:
             raise PurchaseOrderStatusException("Only pending purchase order can be cancelled.")
@@ -102,28 +112,3 @@ class PurchaseOrderService():
         purchase_order.status = PurchaseOrderStatusEnum.CANCELLED
         
         return PurchaseOrderDatabase.update_purchase_order(db, purchase_order)
-    
-    def _validate_status_transition(
-        self,
-        current_status: PurchaseOrderStatusEnum,
-        new_status: PurchaseOrderStatusEnum,
-    ) -> None:
-        allowed_transitions = {
-            PurchaseOrderStatusEnum.PENDING: {
-                PurchaseOrderStatusEnum.PENDING,
-                PurchaseOrderStatusEnum.RECEIVED,
-            },
-            PurchaseOrderStatusEnum.RECEIVED: {
-                PurchaseOrderStatusEnum.RECEIVED,
-                PurchaseOrderStatusEnum.COMPLETED,
-            },
-            PurchaseOrderStatusEnum.COMPLETED: {
-                PurchaseOrderStatusEnum.COMPLETED,
-            },
-        }
-
-        if new_status not in allowed_transitions[current_status]:
-            raise PurchaseOrderStatusException(
-                f"Cannot change status from "
-                f"{current_status.value} to {new_status.value}"
-            )

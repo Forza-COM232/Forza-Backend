@@ -15,3 +15,4 @@ class PurchaseOrderCreate(BaseModel):
 
 class PurchaseOrderUpdate(BaseModel):
     status: Optional[PurchaseOrderStatusEnum] = None
+    purchase_order_item: Optional[list[PurchaseOrderItemCreate]]
