@@ -14,7 +14,7 @@ from src.forza_backend.core.exceptions import (
 from src.forza_backend.infrastructure.database.models.supplier import Supplier
 from src.forza_backend.infrastructure.database.models.inventory import Inventory
 from src.forza_backend.schemas.supplier import SupplierCreate, SupplierUpdate
-from src.forza_backend.services.supplier import SupplierService
+from src.forza_backend.services.supplier_service import SupplierService
 from src.tests.database.utils.mock_data import mock_supplier
 
 

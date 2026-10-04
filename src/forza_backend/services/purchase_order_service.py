@@ -7,15 +7,13 @@ from ..infrastructure.database.purchase_order_database import PurchaseOrderDatab
 from ..infrastructure.database.supplier_database import SupplierDatabase
 from ..infrastructure.database.user_database import UserDatabase
 from ..infrastructure.database.product_database import ProductDatabase
+from ..services.inventory_services import InventoryService
+from ..services.stock_movement_service import StockMovementService
 from ..schemas.purchase import PurchaseOrderCreate, PurchaseOrderUpdate
 from ..core.enums.purchase_order_status import PurchaseOrderStatusEnum
-from ..core.exceptions import (
-    PurchaseOrderSupplierInactiveException,
-    UserAlreadyDeactivatedException,
-    PurchaseOrderStatusException
-)
+from ..core.exceptions import PurchaseOrderSupplierInactiveException, UserAlreadyDeactivatedException, PurchaseOrderStatusException
 
-class PurchaseOrderService():
+class PurchaseOrderService:
     @staticmethod
     def get_purchase_order_by_id(db: Session, purchase_order_id: UUID) -> PurchaseOrder:
         return PurchaseOrderDatabase.get_purchase_order(db, purchase_order_id)
@@ -89,15 +87,27 @@ class PurchaseOrderService():
         return PurchaseOrderDatabase.update_purchase_order(db, purchase_order)
     
     @staticmethod
-    def receive_purchase_order(db: Session, purchase_order_id: UUID) -> PurchaseOrder:
+    def receive_purchase_order(db: Session, purchase_order_id: UUID, received_by: UUID) -> PurchaseOrder:
         purchase_order = PurchaseOrderDatabase.get_purchase_order(db, purchase_order_id)
         if purchase_order.status != PurchaseOrderStatusEnum.PENDING:
             raise PurchaseOrderStatusException("Only pending purchase order can be received.")
         
+        user = UserDatabase.get_user_by_id(db, received_by)
+        
         for item in purchase_order.items:
-            # Insert inventory service logic
-            # Insert stock_movement service logic
-            item = print()
+            InventoryService.increase_stock(
+                db, 
+                product_id=item.product_id,
+                quantity=item.quantity
+            )
+            
+            StockMovementService.create_stock_in(
+                db,
+                product_id=item.product_id,
+                performed_by=user.user_id,
+                quantity=item.quantity,
+                reason=f"Purchase order {purchase_order.purchase_order_id} received."
+            )
         
         purchase_order.status = PurchaseOrderStatusEnum.RECEIVED
         
