@@ -93,6 +93,16 @@ class PurchaseOrderService():
         
         return PurchaseOrderDatabase.update_purchase_order(db, purchase_order)
     
+    @staticmethod
+    def cancelled_purchase_order(db: Session, purchase_order_id: UUID) -> PurchaseOrder:
+        purchase_order = PurchaseOrderDatabase.get_purchase_order(db, purchase_order_id)
+        if purchase_order.status != PurchaseOrderStatusEnum.PENDING:
+            raise PurchaseOrderStatusException("Only pending purchase order can be cancelled.")
+        
+        purchase_order.status = PurchaseOrderStatusEnum.CANCELLED
+        
+        return PurchaseOrderDatabase.update_purchase_order(db, purchase_order)
+    
     def _validate_status_transition(
         self,
         current_status: PurchaseOrderStatusEnum,
