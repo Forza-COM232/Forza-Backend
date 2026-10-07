@@ -1,11 +1,14 @@
+import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 from ...config import DATABASE_URL
 
-if not DATABASE_URL:
-    raise ValueError("DATABASE_URL is not set")
+db_url = DATABASE_URL or os.getenv("DATABASE_URL") or "sqlite:///./forza.db"
 
-engine = create_engine(DATABASE_URL)
+if db_url.startswith("sqlite"):
+    engine = create_engine(db_url, connect_args={"check_same_thread": False})
+else:
+    engine = create_engine(db_url)
 
 SessionLocal = sessionmaker(
     autocommit=False,
