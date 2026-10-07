@@ -40,3 +40,7 @@ build/
 
 # History files
 .history/
+
+# Local databases
+*.db
+*.sqlite*
